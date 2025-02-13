@@ -8,7 +8,7 @@ export default function NavigationBar(){
         <nav>
             <ul>
                 <li><Link to="/">Home</Link></li>
-                <li><Link to="/CreateContact">Create Contact</Link></li>
+                <li><Link to="/AlterContact">Create Contact</Link></li>
             </ul>
         </nav>
     );

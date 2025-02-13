@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { UseFormRegister } from "react-hook-form";
 import { User } from "../objects/UserObjects";
-import { ContactFormContext } from "../pages/CreateContactsPage/CreateContact";
+import { ContactFormContext } from "../pages/CreateContactsPage/AlterContact";
 
 
 export default function UserInput(props : {userProp: keyof User;

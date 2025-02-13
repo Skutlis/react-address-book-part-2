@@ -3,7 +3,7 @@ import { User } from "../../objects/UserObjects";
 import { Link, Route, useFormAction, useNavigate } from "react-router-dom";
 import { useForm, UseFormRegister } from "react-hook-form";
 import UserInput from "../../components/TextInput";
-import { ContactsContext } from "../../App";
+import { AlterContactModes, ContactsContext } from "../../App";
 
 export interface UserFormFunctions{
     register: UseFormRegister<User>
@@ -12,29 +12,43 @@ export interface UserFormFunctions{
 export const ContactFormContext = createContext({} as UserFormFunctions);
 
 
-export default function CreateContact(){
-    const {createdUser, setCreatedUser, userCreated, setUserCreated } = useContext(ContactsContext);
+export default function AlterContact(){
+    const {alteredContact, setAlteredContact, contactCreated, setContactCreated, 
+            contactUpdated, setContactUpdated, alterContactMode, setAlterContactMode } = useContext(ContactsContext);
     const navigate = useNavigate();
 
     const { register, handleSubmit } = useForm({
-        defaultValues: createdUser,
+        defaultValues: alteredContact,
     });
     const onSubmit = (data) => {
-        setCreatedUser((prevUser) => ({ 
+        setAlteredContact((prevUser) => ({ 
             ...prevUser, 
             ...data,
-        })) //Create a user
-        const created = userCreated;
-        setUserCreated(!created); //Allert app to post user
-        navigate("/")
+        })) //Update user by the form
+
+        if (alterContactMode === AlterContactModes.Create){
+            setContactCreated(!contactCreated); //Allert app to post contact
+        }
+        else if (alterContactMode === AlterContactModes.Update){
+            setContactUpdated(!contactUpdated); //Allert app to update(put) contact
+            setAlterContactMode(AlterContactModes.Create); // Set the AlterContactMode back to default (create)
+        }
+        
+        navigate("/");
     };
+
+    const Cancel = () => {
+        setAlteredContact({} as User);
+        setAlterContactMode(AlterContactModes.Create);
+        navigate("/")
+    }
 
     return (
         
     <ContactFormContext.Provider value={{register}} >
         
         <div className="form-container">
-            <h1> Create Contact</h1>
+            <h1> {alterContactMode} Contact</h1>
             
             <form onSubmit={handleSubmit(onSubmit)}>
                 <UserInput userProp="firstName" label="First Name"/>
@@ -42,6 +56,7 @@ export default function CreateContact(){
                 <UserInput userProp="street" label="Street"/>
                 <UserInput userProp="city" label="City"/>
                 <button type="submit">Submit</button>
+                <button type="button" onClick={() => Cancel()}>Cancel</button>
             </form>
             
         </div>   
